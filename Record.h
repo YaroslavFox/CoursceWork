@@ -70,10 +70,7 @@ public:
 
 	void init();
 
-	Record(vector<string> file) {
-		
-	
-	};
+	Record(vector<string> file);
 
 	
 };

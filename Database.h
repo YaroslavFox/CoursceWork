@@ -11,6 +11,8 @@ private:
 	fstream file;
 public:
 	Database();
+
+	void drawTable();
 	//~Database();
 };
 

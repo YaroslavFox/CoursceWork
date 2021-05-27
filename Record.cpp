@@ -22,3 +22,14 @@ void Record::init()
 	
 
 }
+
+Record::Record(vector<string> file)
+{
+	cout << file.size() << endl;
+
+	for (int i = 0; i < file.size(); i++) {
+		cout << file[i] << " ";
+	}
+	cout << "\n";
+
+}
