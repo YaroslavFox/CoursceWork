@@ -2,6 +2,8 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <iomanip>
+#include <fstream>
 
 
 using namespace std;
@@ -49,16 +51,26 @@ private:
 				cin >> ending;
 			}
 		};
+		friend ostream& operator<< (ostream& stream, workTime time) {
+			
+			stream << setw(10) << time.begining << "|" << setw(10) << time.ending;
+
+			return stream;
+		};
+
 	};
 
 	string name; // Student Full name 
 	string topic_code;
 	string work_date;
 	workTime time = workTime();
-	string interval; // in minutes
+	double interval; // in minutes
+
+	enum indexes
+	{NAME, TOPIC_CODE, WORK_DATE, BEGIGNING, ENDING, INTERVALL};
 
 public:
-	string getName() { return name; }
+	string getName() const { return name; }
 	
 	string getTopicCode() { return topic_code; }
 
@@ -66,11 +78,13 @@ public:
 
 	workTime getWorkTime() { return time; }
 
-	string getInterval() { return interval; }
+	double getInterval() { return interval; }
 
-	void init();
+	friend ostream& operator<< (ostream&,const Record);
 
-	Record(vector<string> file);
+	Record init();
+
+	Record(fstream& file, vector<string>& );
 
 	
 };
