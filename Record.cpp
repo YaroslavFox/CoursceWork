@@ -1,6 +1,8 @@
 ﻿#include "Record.h"
+#include <algorithm>
 
-void Record::init()
+
+Record Record::init()
 { 
 	cout << "Enter the name: ";
 	cin >> name;
@@ -18,18 +20,32 @@ void Record::init()
 	cout << '\n' << "Enter the interval in minutes: ";
 	cin >> interval;
 
-	
-	
-
+	return *this;
 }
 
-Record::Record(vector<string> file)
+Record::Record(fstream& file,  vector<string>& users)
 {
-	cout << file.size() << endl;
 
-	for (int i = 0; i < file.size(); i++) {
-		cout << file[i] << " ";
-	}
-	cout << "\n";
+	file >> name >> topic_code >> work_date >> time.begining >> time.ending >> interval;
 
+	//topic_code = file[TOPIC_CODE];
+
+	//work_date = file[WORK_DATE];
+
+	//time.begining = file[BEGIGNING];
+
+	//time.ending = file[ENDING];
+	//cout << file[INTERVALL] << endl;
+	//interval = stod(file[INTERVALL]);
+	
+	if (not count(users.begin(), users.end(), name))
+		users.push_back(name);
 }
+
+ostream& operator<<(ostream& stream, Record record)
+{
+	stream << left << "|" << setw(10) << record.name << "|" << setw(10) << record.topic_code << "|" << setw(10) << record.work_date << "|" << setw(10) << record.time << "|" << setw(10) << record.interval << "|"<< record.interval;
+	return stream;
+}
+
+ 
