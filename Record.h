@@ -35,21 +35,27 @@ private:
 
 		return formCheck(date, "##.##.####");
 	}
-
+	static bool isTime(string str) {
+		return formCheck(str, "##.##");
+	}
 	struct workTime
 	{
 		string begining;
 		string ending;
-		void init() {
-			while (!isDate(begining)) {
-				cout << '\n' << "Enter the begining time dd.mm.yyyy: ";
-				cin >> begining;
+		void enterDate() {
+			while (!isTime(ending)) {
+				cout << '\n' << "Enter the ending time hh.mm: ";
+				getline(cin, ending);
 			}
-
-			while (!isDate(ending)) {
-				cout << '\n' << "Enter the ending time dd.mm.yyyy: ";
-				cin >> ending;
+			while (!isTime(begining)) {
+				cout << '\n' << "Enter the begining time hh.mm: ";
+				getline(cin, begining);
 			}
+		}
+		void init(fstream &file) {
+			enterDate();
+			file << begining << '|';
+			file << ending << '|';
 		};
 		friend ostream& operator<< (ostream& stream, workTime time) {
 			
@@ -61,13 +67,14 @@ private:
 	};
 
 	string name; // Student Full name 
+	string computer;
 	string topic_code;
 	string work_date;
 	workTime time = workTime();
 	double interval; // in minutes
 
-	enum indexes
-	{NAME, TOPIC_CODE, WORK_DATE, BEGIGNING, ENDING, INTERVALL};
+	//enum indexes
+	//{NAME, TOPIC_CODE, WORK_DATE, BEGIGNING, ENDING, INTERVALL};
 
 public:
 	string getName() const { return name; }
@@ -82,10 +89,11 @@ public:
 
 	friend ostream& operator<< (ostream&,const Record);
 
-	Record init();
+	Record init(fstream &file);
 
 	Record(fstream& file, vector<string>& );
+	Record() {};
 
-	
+	string getComputer() { return computer; }
 };
 

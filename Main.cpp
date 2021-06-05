@@ -27,9 +27,9 @@ int main()
 
 	while (true) {
 		cout << " Enter command: ";
-		cin >> command;
-
+		getline(cin, command);
 		if (command == "add" || command == "+") {
+			database.addRecord();
 			continue;
 		}
 		else if (command == "draw") {
@@ -44,6 +44,7 @@ int main()
 			cout << commands_list;
 		}
 		else if (command == "exit") {
+			database.save();
 			break;
 		}
 		else {

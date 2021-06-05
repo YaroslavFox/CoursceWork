@@ -1,22 +1,40 @@
 #include "Database.h"
-
+#include <algorithm>
 string param_theme;
-
+namespace dataBase {
+	bool compareByAlhpabet(Record first, Record second) {
+		if (first.getName() == second.getName())
+			return first.getWorkDate() < second.getWorkDate();
+		return first.getName() < second.getName();
+	}
+}
 Database::Database()
 {
-	file.open("data\\compuer_list.txt");
+	file.open("Database.dat", ios::in|ios::binary);
 	string raw_string;
-	
-	while (file >> raw_string)
+	if (!file.is_open()) {
+		return;
+	}
+	while (!file.eof())
 	{ 
-		file >> raw_string;
-		computers.push_back(Computer(raw_string, programmers, allReportAmount));//, users, themes
-		computer_indexes[computers[computers.size() - 1].getName()] =(int) computers.size();
+		Record new_record = Record(file, userss);
+		if (new_record.getName().size() == 0)
+			return;
+		records.push_back(new_record);//, users, themes
+		computers[new_record.getComputer()].push_back(new_record.getName());
+
+		//computer_indexes[records[records.size() - 1].getName()] =(int) records.size();
 
 	}
+	//file.close();
+	sort(records.begin(), records.end(), dataBase::compareByAlhpabet);
+	file.close();
 
 
 }
+
+
+
 
 bool amountCompare(Programer &first, Programer &second) {
 	return first.amount > second.amount;
@@ -29,13 +47,10 @@ bool intervalCompare(Programer &first, Programer &second) {
 
 void Database::drawTable()
 {
-	/*for (Computer computer : computers) {
-		computer.drawTable();
-	}*/
-
-	for (int i = 0; i < computers.size(); i++) {
-		computers[i].drawTable();
-	}
+	string line_separator = "\n-------------------------------------------------------------------\n";
+	cout << line_separator;
+	for (Record record : records)
+		cout << record << line_separator;
 }
 
 void Database::drawUsers() {
@@ -88,25 +103,29 @@ void Database::chooseComputer(string &command) {
 		if (command == "back")
 			return;
 
-		if (computer_indexes.find(command) == computer_indexes.end()) {
+		if (computers.find(command) == computers.end()) {
 			cout << " Table '" << command << "' doesn't exist\n";
 			continue;
 		}
 		else
-			computers[computer_indexes["command"]].choosed(command);
+			cout << computers[command].size() << endl;
 	}
 }
-
-void Database::addUser()
+ 
+void Database::addRecord()
 {
-	//users.push	
+	file.open("Database.dat", ios::app | ios::binary);
+	if (file.is_open())
+		cout << "Can't open" << endl;
+	records.push_back(Record().init(file));
+	file.close();
 }
 
 
 
 void Database::choose(string &command)
 {	
-	while (cin.get() != '\n');
+	//while (cin.get() != '\n');
 	//bool not_skip = true;
 	//cin.clear();
 	while (true) {
@@ -138,6 +157,41 @@ void Database::choose(string &command)
 
 	}
 }
+
+void Database::change(string &command) {
+	Record record;
+	while (true) {
+		cout << "\n Enter one of the commands below \n\t'back' to go back \n\t'name' - searh by name\n\t'computer' - search by computer code\n\t'date' - search by date\n\t";
+		getline(cin, command);
+
+		if (command == "back")
+			return;
+		if (command == "name") {
+			cout << "Enter name: ";
+			getline(cin, command);
+			for (Record temp : records)
+				if (record.getName() == command)
+					record = temp;
+		}
+	
+		else if (command == "computer") {
+			cout << "Enter computer code: ";
+			getline(cin, command);
+			for (Record temp : records)
+				if (record.getComputer() == command)
+					record = temp;
+		}
+		if (command == "date") {
+			cout << "Enter date: ";
+			getline(cin, command);
+			for (Record temp : records)
+				if (record.getWorkDate() == command)
+					record = temp;
+		}
+		record.getWorkTime().enterDate();
+	}
+}
+
 //Database::~Database()
 //{
 //	file.close();
