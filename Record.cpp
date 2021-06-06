@@ -7,13 +7,10 @@ Record Record::init(fstream &file)
 
 	cout << "Enter the name: ";
 	getline(cin, name);
-	file << name <<'|';
 	cout << "\nEnter the Computer: ";
 	getline(cin, computer);
-	file << computer << '|';
 	cout << "\nEnter the topic code: ";
 	getline(cin, topic_code);
-	file << topic_code << '|';
 
 
 
@@ -22,13 +19,12 @@ Record Record::init(fstream &file)
 		cout << "\nEnter the work date dd.mm.yyyy: ";
 		getline(cin, work_date);
 	}
-	file << work_date << '|';
 
-	time.init(file);
-
+	time.init();
 	cout << '\n' << "Enter the interval in minutes: ";
 	cin >> interval;
-	file << interval;
+
+	writeIn(file);
 	return *this;
 }
 
@@ -57,6 +53,19 @@ Record::Record(fstream& file,  vector<string>& users)
 		
 	if (not count(users.begin(), users.end(), name))
 		users.push_back(name);
+}
+
+void Record::writeIn(fstream& file)
+{
+	file << name << '|';
+	file << computer << '|';
+	file << topic_code << '|';
+	file << work_date << '|';
+	file << time.begining << '|';
+	file << time.ending << '|';
+	file << interval;
+
+
 }
 
 ostream& operator<<(ostream& stream, Record record)

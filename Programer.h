@@ -8,8 +8,8 @@ class Programer
 {
 public:
 	string name;
-	Programer(string &m_name, Record& record) { this->name = record.getName(); addRecord(m_name,record); }
-	void addRecord(string &m_name, Record& record);
+	Programer(Record& record) { this->name = record.getName(); addRecord(record); }
+	void addRecord( Record& record);
 	friend ostream& operator<< (ostream&, const Programer);
 	class Computer {
 	private: 
@@ -24,7 +24,7 @@ public:
 		};
 		string name;
 		vector<Theme> themes;
-		Computer(string& m_name, Record& record) { this->name = m_name; addRecord(record); }
+		Computer(Record& record) { this->name = record.getComputer(); addRecord(record); }
 		friend ostream& operator<< (ostream&, const Computer);
 
 		void addRecord(Record& record);

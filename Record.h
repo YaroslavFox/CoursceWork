@@ -43,6 +43,8 @@ private:
 		string begining;
 		string ending;
 		void enterDate() {
+			begining.erase();
+			ending.erase();
 			while (!isTime(ending)) {
 				cout << '\n' << "Enter the ending time hh.mm: ";
 				getline(cin, ending);
@@ -52,10 +54,8 @@ private:
 				getline(cin, begining);
 			}
 		}
-		void init(fstream &file) {
+		void init() {
 			enterDate();
-			file << begining << '|';
-			file << ending << '|';
 		};
 		friend ostream& operator<< (ostream& stream, workTime time) {
 			
@@ -83,7 +83,7 @@ public:
 
 	string getWorkDate() { return work_date; }
 
-	workTime getWorkTime() { return time; }
+	workTime &getWorkTime() { return time; }
 
 	double getInterval() { return interval; }
 
@@ -95,5 +95,7 @@ public:
 	Record() {};
 
 	string getComputer() { return computer; }
+
+	void writeIn(fstream& file);
 };
 

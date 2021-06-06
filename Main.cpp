@@ -30,6 +30,8 @@ int main()
 		getline(cin, command);
 		if (command == "add" || command == "+") {
 			database.addRecord();
+			while (cin.get() != '\n');
+
 			continue;
 		}
 		else if (command == "draw") {
@@ -38,13 +40,14 @@ int main()
 		else if (command == "choose") {
 			database.choose(command);
 			cout<<"\n" << commands_list;
-
 		}
 		else if (command == "commands") {
 			cout << commands_list;
 		}
+		else if (command == "change") {
+			database.change(command);
+		}
 		else if (command == "exit") {
-			database.save();
 			break;
 		}
 		else {

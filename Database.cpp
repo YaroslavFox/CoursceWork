@@ -13,6 +13,8 @@ Database::Database()
 	file.open("Database.dat", ios::in|ios::binary);
 	string raw_string;
 	if (!file.is_open()) {
+		file.open("Database.dat", ios::out | ios::binary);
+		file.close();
 		return;
 	}
 	while (!file.eof())
@@ -20,10 +22,21 @@ Database::Database()
 		Record new_record = Record(file, userss);
 		if (new_record.getName().size() == 0)
 			return;
+		allReportAmount += 1;
 		records.push_back(new_record);//, users, themes
 		computers[new_record.getComputer()].push_back(new_record.getName());
+		bool hadBeenUpdated = false;
 
 		//computer_indexes[records[records.size() - 1].getName()] =(int) records.size();
+		for (Programer& programmer : programmers) {
+			if (programmer.name == new_record.getName()) {
+				programmer.addRecord( new_record);
+				hadBeenUpdated = true;
+				break;
+			}
+		}
+		if (not hadBeenUpdated)
+			programmers.push_back(Programer(new_record));
 
 	}
 	//file.close();
@@ -115,9 +128,19 @@ void Database::chooseComputer(string &command) {
 void Database::addRecord()
 {
 	file.open("Database.dat", ios::app | ios::binary);
-	if (file.is_open())
-		cout << "Can't open" << endl;
+
+	file << "\n";
 	records.push_back(Record().init(file));
+	file.close();
+}
+
+void Database::rewriteData()
+{
+	file.open("Database.dat",ios::out|ios::binary);
+	for (Record record : records) {
+		record.writeIn(file);
+		file << "\n";
+	}
 	file.close();
 }
 
@@ -158,8 +181,20 @@ void Database::choose(string &command)
 	}
 }
 
+bool compString(const string& first, const string& second) {
+	if (first.size() != second.size())
+		return false;
+	for (int i = 0; i < first.size(); i++) {
+		if (first[i] != second[i]) {
+			cout << first[i] << " | " << second<<endl;
+			return false; 
+		}
+	}
+}
+
 void Database::change(string &command) {
-	Record record;
+	Record *record = NULL;
+	bool is_found = false;
 	while (true) {
 		cout << "\n Enter one of the commands below \n\t'back' to go back \n\t'name' - searh by name\n\t'computer' - search by computer code\n\t'date' - search by date\n\t";
 		getline(cin, command);
@@ -169,27 +204,44 @@ void Database::change(string &command) {
 		if (command == "name") {
 			cout << "Enter name: ";
 			getline(cin, command);
-			for (Record temp : records)
-				if (record.getName() == command)
-					record = temp;
+			for (Record &temp : records)
+				if (compString(command, temp.getName())) {
+					record = &temp;
+					is_found = true;
+				}
 		}
 	
 		else if (command == "computer") {
 			cout << "Enter computer code: ";
 			getline(cin, command);
-			for (Record temp : records)
-				if (record.getComputer() == command)
-					record = temp;
+			for (Record &temp : records)
+				if (compString(temp.getComputer(), command))
+				{
+					record = &temp;
+					is_found = true;
+				}
 		}
 		if (command == "date") {
 			cout << "Enter date: ";
 			getline(cin, command);
-			for (Record temp : records)
-				if (record.getWorkDate() == command)
-					record = temp;
+			for (Record &temp : records)
+				if (compString(temp.getWorkDate(), command))
+				{
+					record = &temp;
+					is_found = true;
+				}
 		}
-		record.getWorkTime().enterDate();
+		if (!is_found) {
+			cout << " Record with this params wasn't found" << endl;
+			continue;
+		}
+
+			record->getWorkTime().enterDate();
+
+			break;
+		
 	}
+	rewriteData();
 }
 
 //Database::~Database()

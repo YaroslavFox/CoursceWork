@@ -33,8 +33,6 @@ public:
 
 	void addRecord();
 
-	void save() {
-		file.close();
-	}
+	void rewriteData();
 };
 
