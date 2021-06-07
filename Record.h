@@ -71,7 +71,7 @@ private:
 	string topic_code;
 	string work_date;
 	workTime time = workTime();
-	double interval; // in minutes
+	int interval; // in minutes
 
 	//enum indexes
 	//{NAME, TOPIC_CODE, WORK_DATE, BEGIGNING, ENDING, INTERVALL};
@@ -85,7 +85,7 @@ public:
 
 	workTime &getWorkTime() { return time; }
 
-	double getInterval() { return interval; }
+	int getInterval() { return interval; }
 
 	friend ostream& operator<< (ostream&,const Record);
 

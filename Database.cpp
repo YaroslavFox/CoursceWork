@@ -128,8 +128,7 @@ void Database::chooseComputer(string &command) {
 void Database::addRecord()
 {
 	file.open("Database.dat", ios::app | ios::binary);
-
-	file << "\n";
+	cout << file.is_open() << endl;
 	records.push_back(Record().init(file));
 	file.close();
 }
@@ -243,8 +242,3 @@ void Database::change(string &command) {
 	}
 	rewriteData();
 }
-
-//Database::~Database()
-//{
-//	file.close();
-//}
