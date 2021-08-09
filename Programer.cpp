@@ -1,7 +1,5 @@
 #include "Programer.h"
 
-
-
 void Programer::addRecord(Record& record)
 {
 	amount += 1;
@@ -25,8 +23,6 @@ void Programer::Computer::addRecord(Record& record)
 		}
 	}
 	themes.push_back(Theme(record.getTopicCode()));
-
-
 }
 
 ostream& operator<<(ostream& stream, const Programer::Computer::Theme theme)

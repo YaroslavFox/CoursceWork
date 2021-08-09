@@ -1,7 +1,6 @@
 ﻿#include "Record.h"
 #include <algorithm>
 
-
 Record Record::init(fstream &file)
 { 
 
@@ -11,10 +10,6 @@ Record Record::init(fstream &file)
 	getline(cin, computer);
 	cout << "\nEnter the topic code: ";
 	getline(cin, topic_code);
-
-
-
-
 	while (!isDate(work_date)) {
 		cout << "\nEnter the work date dd.mm.yyyy: ";
 		getline(cin, work_date);
@@ -30,12 +25,6 @@ Record Record::init(fstream &file)
 
 Record::Record(fstream& file,  vector<string>& users)
 {
-
-	//file >> name >> computer >> topic_code >> work_date >> time.begining >> time.ending >> interval;
-	//getline(file,name, '|');
-	//
-	////if((int)name[0]==(int)(char)"\n")
-	//name.erase(name.begin());
 	getline(file, name, '|');
 	getline(file, computer, '|');
 	getline(file, topic_code, '|');
@@ -44,14 +33,6 @@ Record::Record(fstream& file,  vector<string>& users)
 	getline(file, time.ending, '|');
 
 	file.read((char*)&interval, sizeof(interval));
-	/*string temp;
-	file >> temp;
-	cout << temp;*/
-	/*string temp;
-
-	getline(file, temp, '|');
-
-	interval = stod()*/
 		
 	if (not count(users.begin(), users.end(), name))
 		users.push_back(name);
@@ -73,29 +54,10 @@ void Record::writeIn(fstream& file)
 	file.write((time.ending).c_str(), time.ending.size());
 	file.write(&sepearator, sizeof(char));
 	file.write((char*) &interval, sizeof(interval));
-
-
-
-
-
-	//file.write((char*)(interval), sizeof(interval));
-	//file.write((char*)interval , sizeof(name));
-	//file << name << '|';
-	//file << computer << '|';
-	//file << topic_code << '|';
-	//file << work_date << '|';
-	//file << time.begining << '|';
-	//file << time.ending << '|';
-	/*file << interval;*/
-	
-
 }
 
 ostream& operator<<(ostream& stream, Record record)
 {
-	
-	stream << left << "|" << setw(10) << record.name << "|" << setw(10) << record.computer << "|" << setw(10) << record.topic_code << "|" << setw(10) << record.work_date << "|" << setw(10) << record.time << "|" << setw(10) << record.interval << "|";
+	stream << left << "|" << setw(14) << record.name << "|"  << setw(8) << record.topic_code << "|" << setw(10) << record.work_date << "|" << setw(10) << record.time << "|" << setw(11) << record.interval << "|";
 	return stream;
 }
-
- 

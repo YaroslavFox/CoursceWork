@@ -1,4 +1,4 @@
-#include "Database.h"
+﻿#include "Database.h"
 #include <algorithm>
 string param_theme;
 namespace dataBase {
@@ -27,7 +27,6 @@ Database::Database()
 		computers[new_record.getComputer()].push_back(new_record.getName());
 		bool hadBeenUpdated = false;
 
-		//computer_indexes[records[records.size() - 1].getName()] =(int) records.size();
 		for (Programer& programmer : programmers) {
 			if (programmer.name == new_record.getName()) {
 				programmer.addRecord( new_record);
@@ -39,7 +38,7 @@ Database::Database()
 			programmers.push_back(Programer(new_record));
 
 	}
-	//file.close();
+	
 	sort(records.begin(), records.end(), dataBase::compareByAlhpabet);
 	file.close();
 
@@ -60,8 +59,13 @@ bool intervalCompare(Programer &first, Programer &second) {
 
 void Database::drawTable()
 {
-	string line_separator = "\n-------------------------------------------------------------------\n";
-	cout << line_separator;
+	string header = " -----------------------------------------------------------------------------"
+		"\n|     ФИО      |  Шифр  |   Дата   |     Время     |    Время     |  Интервал |"
+		"\n| программиста |  темы  |  работы  | начала работы | конца работы | в минутах |"
+		"\n ------------------------------------------------------------------------------\n";
+
+	string line_separator = "\n -----------------------------------------------------------------------------\n";
+	cout << header;
 	for (Record record : records)
 		cout << record << line_separator;
 }
@@ -101,7 +105,6 @@ void Database::chooseSort(string& command)
 		else if (command == "Time") {
 			cout << " Enter theme: ";
 			cin >> param_theme;
-
 			sort(programmers.begin(), programmers.end(), intervalCompare);
 			return;
 		}
@@ -115,11 +118,8 @@ void Database::chooseComputer(string &command) {
 		getline(cin, command);
 		if (command == "back")
 			return;
-
-		if (computers.find(command) == computers.end()) {
+		if (computers.find(command) == computers.end()) 
 			cout << " Table '" << command << "' doesn't exist\n";
-			continue;
-		}
 		else
 			cout << computers[command].size() << endl;
 	}
@@ -127,19 +127,18 @@ void Database::chooseComputer(string &command) {
  
 void Database::addRecord()
 {
+	file.close();
 	file.open("Database.dat", ios::app | ios::binary);
-	cout << file.is_open() << endl;
 	records.push_back(Record().init(file));
 	file.close();
 }
 
 void Database::rewriteData()
 {
+	file.close();
 	file.open("Database.dat",ios::out|ios::binary);
-	for (Record record : records) {
+	for (Record record : records)
 		record.writeIn(file);
-		file << "\n";
-	}
 	file.close();
 }
 
@@ -147,9 +146,6 @@ void Database::rewriteData()
 
 void Database::choose(string &command)
 {	
-	//while (cin.get() != '\n');
-	//bool not_skip = true;
-	//cin.clear();
 	while (true) {
 		cout << "\n Enter one of the commands below \n\t'back' to go back \n\t'computer' - to got to computers\n\t'draw users' - to draw users information\n\t'reports' - reports amount\n\t user - choose user ): ";
 		getline(cin, command);
@@ -158,15 +154,12 @@ void Database::choose(string &command)
 			return;
 		else if (command == "computer") {
 			chooseComputer(command);
-			//continue;
 		}
 		else if (command == "draw users") {
 			drawUsers();
-			//continue;
 		}
 		else if (command == "user") {
 			chooseUser(command);
-			//continue;
 		}
 		else if (command == "reports") {
 			cout << " Amount of reports: " << allReportAmount << "\n";
@@ -189,53 +182,49 @@ bool compString(const string& first, const string& second) {
 			return false; 
 		}
 	}
+	return true;
 }
 
 void Database::change(string &command) {
 	Record *record = NULL;
+	vector<int> temp_records;
 	bool is_found = false;
 	while (true) {
-		cout << "\n Enter one of the commands below \n\t'back' to go back \n\t'name' - searh by name\n\t'computer' - search by computer code\n\t'date' - search by date\n\t";
-		getline(cin, command);
+		
 
+		
+		cout << "Enter name: ";
+		getline(cin, command);
 		if (command == "back")
 			return;
-		if (command == "name") {
-			cout << "Enter name: ";
-			getline(cin, command);
-			for (Record &temp : records)
-				if (compString(command, temp.getName())) {
-					record = &temp;
-					is_found = true;
-				}
-		}
-	
-		else if (command == "computer") {
-			cout << "Enter computer code: ";
-			getline(cin, command);
-			for (Record &temp : records)
-				if (compString(temp.getComputer(), command))
+		for (int i = 0; i < records.size(); i++)
+			if (compString(command, records[i].getName())) {
+				temp_records.push_back(i);
+			}
+
+		cout << "Enter computer code: ";
+		getline(cin, command);
+		for (int i = 0; i < temp_records.size(); i++)
+			if (!compString(records[temp_records[i]].getComputer(), command))
 				{
-					record = &temp;
-					is_found = true;
+					temp_records.erase(temp_records.begin() + i);
 				}
-		}
-		if (command == "date") {
-			cout << "Enter date: ";
-			getline(cin, command);
-			for (Record &temp : records)
-				if (compString(temp.getWorkDate(), command))
-				{
-					record = &temp;
-					is_found = true;
-				}
-		}
+
+		cout << "Enter date: ";
+		getline(cin, command);
+		for (int i = 0; i < temp_records.size(); i++)
+			if (!compString(records[temp_records[i]].getWorkDate(), command))
+			{
+				temp_records.erase(temp_records.begin() + i);
+				is_found = true;
+			}
+		
 		if (!is_found) {
 			cout << " Record with this params wasn't found" << endl;
 			continue;
 		}
 
-			record->getWorkTime().enterDate();
+		records[temp_records[0]].getWorkTime().enterDate();
 
 			break;
 		

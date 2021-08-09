@@ -5,10 +5,7 @@
 #include <iomanip>
 #include <fstream>
 
-
 using namespace std;
-
-
 
 class Record
 {
@@ -58,9 +55,7 @@ private:
 			enterDate();
 		};
 		friend ostream& operator<< (ostream& stream, workTime time) {
-			
-			stream << setw(10) << time.begining << "|" << setw(10) << time.ending;
-
+			stream << setw(15) << time.begining << "|" << setw(14) << time.ending;
 			return stream;
 		};
 
@@ -71,10 +66,7 @@ private:
 	string topic_code;
 	string work_date;
 	workTime time = workTime();
-	int interval; // in minutes
-
-	//enum indexes
-	//{NAME, TOPIC_CODE, WORK_DATE, BEGIGNING, ENDING, INTERVALL};
+	int interval = 0; // in minutes
 
 public:
 	string getName() const { return name; }
@@ -98,4 +90,3 @@ public:
 
 	void writeIn(fstream& file);
 };
-
